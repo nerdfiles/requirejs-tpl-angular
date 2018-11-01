@@ -71,7 +71,9 @@ define([
         load: function(name, parentRequire, onload, config) {
             if (!config.isBuild) {
                 text.get(require.toUrl(name), function(contents) {
+                  require(['angular'], function() {
                     onload(tpl._cacheTemplate(name, contents));
+                  });
                 });
             } else {
                 var fileName = require.toUrl(name);
