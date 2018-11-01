@@ -55,31 +55,30 @@ define([
     var tpl = {
 
         _cacheTemplate: function(name, contents) {
-            require(['angular'], function(angular) {
-              if (!tplModule) {
-                  tplModule = angular.module("tpl", []);
-              }
-              tplModule.run(["$templateCache", function($templateCache) {
-                  $templateCache.put(name, contents);
-              }]);
-            });
+            if (true) {
+              require(['angular'], function(angular) {
+                  if (!tplModule) {
+                      tplModule = angular.module("tpl", []);
+                  }
+                  tplModule.run(["$templateCache", function($templateCache) {
+                      $templateCache.put(name, contents);
+                  }]);
+              });
+            }
             return contents;
         },
 
         load: function(name, parentRequire, onload, config) {
             if (!config.isBuild) {
-                text.get(require.toUrl("../templates/" + name), function(contents) {
-                    // Add to the template cache.
-                    require(["angular"], function(angular) {
-                        onload(tpl._cacheTemplate(angular, name, contents));
-                    });
+                text.get(require.toUrl(name), function(contents) {
+                    onload(tpl._cacheTemplate(name, contents));
                 });
             } else {
                 var fileName = require.toUrl(name);
                 buildMap[name] = tpl._cacheTemplate(name, loadFile(fileName));
+                onload();
             }
 
-            onload();
 
         },
 
